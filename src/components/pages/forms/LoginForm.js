@@ -76,7 +76,6 @@ class LoginForm extends React.Component{
                 </FormGroup>
                 <Button preventDefault>Submit</Button>
             </Form>
-            //test comment
         )
     }
 }
