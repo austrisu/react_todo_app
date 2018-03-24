@@ -1,0 +1,60 @@
+.container{
+  max-width: 700px;
+  margin: auto;
+  padding-right: 20px;
+  padding-left: 20px;
+}
+
+.container *{
+  text-align-all: center;
+}
+
+button.btn.btn-success{
+  /*background-color: aqua;*/
+  /*border: none;*/
+  height: 50px;
+  margin-left:10px;
+}
+
+.taskHeader{
+  display: flex;
+  margin-bottom: 10px;
+}
+
+input{
+  height: 50px;
+  margin-right: 10px;
+  transition: all 0.5s;
+}
+
+.taskHeader button, input{
+  width:100%;
+}
+
+@media screen and (max-width: 700px){
+  body{
+    background-color: antiquewhite;
+  }
+  .taskHeader {
+    flex-wrap: wrap;
+  }
+
+  input{
+    margin-right: 0px;
+    margin-bottom: 10px;
+  }
+}
+
+h3{
+  display: inline-block;
+  cursor: pointer;
+}
+
+button.remove.btn.btn-danger{
+  float: right;
+}
+
+.striked{
+  text-decoration: line-through;
+}
+
