@@ -4,6 +4,8 @@ import {Task} from '../Task'
 import {NotifErr} from "../NotifErr";
 import { ListGroup } from 'reactstrap';
 import {NavBar} from "../Navbar";
+import api from "../../api.js"
+
 
 //TODO create helper with all the functions necesary
 
@@ -14,21 +16,29 @@ class UserPage extends Component
         super();
         this.state = {
             // tasks: ["Todo", "Toda"],
-            tasks:[
-                {todo:"sdfsdf", isCompleted: false},
-                {todo:"sdgsdgg", isCompleted: false}
+            tasks:
+            [
+
             ],
+
             currentToDo: "",
-            notifErr: ""
+            notifErr: "",
+            userName: ""
         };
     }
 
-    //copies state of tudos, pushes new walue in coppy, then updates todos with new values
+
     addTodo = () => {
         if(this.state.currentToDo !== ""){
             let copy = this.state.tasks.slice();
             copy.push({todo:this.state.currentToDo, isCompleted: false });
-            this.setState({tasks: copy});
+
+
+            api.user.addTodo(copy).then(
+              this.setState({tasks: copy})
+            ).catch(err=>
+                this.sestState({notifErr: "cant add on server"})
+            )
 
             //resets input field value
             this.setState({
@@ -46,29 +56,49 @@ class UserPage extends Component
     removeTodo = i => {
         let copy = this.state.tasks.slice();
         copy.splice(i, 1);
-        this.setState({tasks: copy});
+        api.user.removeTodo(copy).then((res) => {
+            this.setState({tasks: copy});
+        })
     };
 
     strikeTodo = i =>{
         let copy = this.state.tasks.slice();
         copy[i].isCompleted = !copy[i].isCompleted;
-        this.setState({tasks: copy});
-        console.log("tada")
+        api.user.removeTodo(copy).then((res) => {
+            this.setState({tasks: copy});
+        })
     };
+
+    no = () => {
+    }
+
+    onLoad = () => {
+      console.log("onload");
+        api.user.getUserData().then(res =>{
+          console.log(res.data.data);
+          this.setState({
+            userName: res.data.data.user,
+            tasks: res.data.data.todos
+          });
+          console.log(this.state.tasks);
+        })
+    }
 
     render() {
         let drawTask = this.state.tasks.map((e,i) => {
-            return <Task key={i}
-                         todo={e.todo}
-                         strike ={() => this.strikeTodo(i)}
-                         isCompleted = {this.state.tasks[i].isCompleted}
-                         remove={() => this.removeTodo(i)}
-            />
-        })
+              return <Task key={i}
+                           todo={e.todo}
+                           strike ={() => this.strikeTodo(i)}
+                           isCompleted = {this.state.tasks[i].isCompleted}
+                           remove={() => this.removeTodo(i)}
+              />
+          })
+
 
         return (
             <div>
-                <NavBar/>
+              {(this.state.tasks.length === 0 )? this.onLoad() : this.no()}
+                <NavBar username = {this.state.userName}/>
                 <div className="container">
                     <InputForm
                         currentToDo = {this.state.currentToDo}
@@ -76,7 +106,7 @@ class UserPage extends Component
                         add={this.addTodo}/>
                     <NotifErr message = {this.state.notifErr}/>
                     <ListGroup>
-                        {drawTask}
+                        {(this.state.tasks.length !== 0 )? drawTask : this.no()}
                     </ListGroup>
                 </div>
             </div>

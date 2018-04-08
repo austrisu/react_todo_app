@@ -6,6 +6,7 @@ const UserPage = () => (
 
             <div>
                 <h1>Home page</h1>
+                <Button color="success"><Link to="/register">Register</Link></Button>
                 <Button color="success"><Link to="/login">LogIn</Link></Button>
             </div>
 
